@@ -23,6 +23,7 @@ func main() {
 	fontPath := env("FONTPATH", "fonts/SourceHanSansTC-VF.ttf")
 	backgroundImage := env("BACKGROUND_IMAGE_PATH", "")
 	backgroundColor := env("BACKGROUND_COLOR", "")
+	textColor := env("TEXT_COLOR", "")
 
 	param := text2img.Params{
 		FontPath: fontPath,
@@ -38,6 +39,16 @@ func main() {
 		if c, err := colors.ParseHEX(backgroundColor); err == nil {
 			rgba := c.ToRGBA()
 			param.BackgroundColor = color.RGBA{
+				rgba.R, rgba.G, rgba.B, uint8(rgba.A),
+			}
+		}
+	}
+
+	if textColor != "" {
+		log.Println("TEXT_COLOR:" + textColor)
+		if c, err := colors.ParseHEX(textColor); err == nil {
+			rgba := c.ToRGBA()
+			param.TextColor = color.RGBA{
 				rgba.R, rgba.G, rgba.B, uint8(rgba.A),
 			}
 		}
