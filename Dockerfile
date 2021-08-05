@@ -8,7 +8,6 @@ COPY . .
 RUN CGO_ENABLED=0 go build  cmd/bog.go
 
 FROM alpine:3.14
-
 #final stage
 RUN apk --no-cache add ca-certificates
 
