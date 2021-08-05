@@ -29,10 +29,12 @@ func main() {
 	}
 
 	if backgroundImage != "" {
+		log.Println("BGImage:" + backgroundImage)
 		param.BackgroundImagePath = backgroundImage
 	}
 
 	if backgroundColor != "" {
+		log.Println("BGCOLOR:" + backgroundColor)
 		if c, err := colors.ParseHEX(backgroundColor); err == nil {
 			rgba := c.ToRGBA()
 			param.BackgroundColor = color.RGBA{
