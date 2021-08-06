@@ -7,6 +7,7 @@ import (
 	"image/jpeg"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/julianshen/text2img"
@@ -62,6 +63,7 @@ func (bog *BetterOG) Start() {
 		text := c.Param("text")
 
 		if buf, err := bog.drawText(text); err == nil {
+			c.Header("content-length", strconv.Itoa(len(buf.Bytes())))
 			c.Data(200, "image/jpeg", buf.Bytes())
 		} else {
 			c.AbortWithError(500, err)
