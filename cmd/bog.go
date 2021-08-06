@@ -27,6 +27,8 @@ func main() {
 
 	param := text2img.Params{
 		FontPath: fontPath,
+		Width:    800,
+		Height:   400,
 	}
 
 	if backgroundImage != "" {
