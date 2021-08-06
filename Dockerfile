@@ -14,6 +14,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /betterog/bog /root/
 COPY --from=builder /betterog/fonts /root/fonts/
+COPY --from=builder /betterog/static /root/static/
 
 EXPOSE 80
 

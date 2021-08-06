@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/jpeg"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/julianshen/text2img"
@@ -66,6 +67,8 @@ func (bog *BetterOG) Start() {
 			c.AbortWithError(500, err)
 		}
 	})
+
+	r.StaticFS("/test", http.Dir("static/"))
 
 	r.Run(bog.Addr)
 }
