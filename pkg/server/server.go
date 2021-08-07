@@ -3,9 +3,9 @@ package betterog
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"image"
 	"image/jpeg"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -57,6 +57,12 @@ func isBot(c *gin.Context) bool {
 	return useragent.Bot
 }
 
+func cacheControl(c *gin.Context, ttl int) {
+	c.Writer.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d, s-maxage=%d", ttl, ttl))
+	c.Writer.Header().Set("CDN-Cache-Control", fmt.Sprintf("%d", ttl))
+	c.Writer.Header().Set("Cloudflare-CDN-Cache-Control", fmt.Sprintf("max-age=%d", ttl))
+}
+
 func (bog *BetterOG) Start() {
 	r := gin.Default()
 
@@ -72,10 +78,12 @@ func (bog *BetterOG) Start() {
 			c.AbortWithStatus(403)
 			return
 		}
+
 		text := c.Param("text")
 
 		if buf, err := bog.drawText(text); err == nil {
 			c.Header("content-length", strconv.Itoa(len(buf.Bytes())))
+			cacheControl(c, 86400)
 			c.Data(200, "image/jpeg", buf.Bytes())
 		} else {
 			c.AbortWithError(500, err)
@@ -83,11 +91,16 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/c/:encodedurl", func(c *gin.Context) {
-		log.Println(c.Request.Header)
+		if !isBot(c) {
+			c.AbortWithStatus(403)
+			return
+		}
+
 		encodedurl := c.Param("encodedurl")
 
 		if buf, err := page.Capture(encodedurl); err == nil {
 			c.Header("content-length", strconv.Itoa(len(buf)))
+			cacheControl(c, 86400)
 			c.Data(200, "image/jpeg", buf)
 		} else {
 			c.AbortWithError(500, err)
