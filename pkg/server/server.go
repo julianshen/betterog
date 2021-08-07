@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"image"
 	"image/jpeg"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -93,10 +94,10 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/c/:encodedurl", func(c *gin.Context) {
-		/*if !isBot(c) {
+		if !isBot(c) {
 			c.AbortWithStatus(403)
 			return
-		}*/
+		}
 
 		encodedurl := c.Param("encodedurl")
 
@@ -105,6 +106,7 @@ func (bog *BetterOG) Start() {
 			cacheControl(c, 10800)
 			c.Data(200, "image/jpeg", buf)
 		} else {
+			log.Println(err)
 			c.AbortWithError(500, err)
 		}
 	})
