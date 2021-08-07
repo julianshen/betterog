@@ -38,6 +38,8 @@ func (bog *BetterOG) drawText(text string) (*bytes.Buffer, error) {
 	buf := bytes.NewBuffer(make([]byte, 0))
 	if decoded, err := base64.URLEncoding.DecodeString(text); err == nil {
 		text = string(decoded)
+	} else {
+		return nil, err
 	}
 
 	var err error
