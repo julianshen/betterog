@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/julianshen/betterog/pkg/page"
 	"github.com/julianshen/text2img"
 )
 
@@ -65,6 +66,18 @@ func (bog *BetterOG) Start() {
 		if buf, err := bog.drawText(text); err == nil {
 			c.Header("content-length", strconv.Itoa(len(buf.Bytes())))
 			c.Data(200, "image/jpeg", buf.Bytes())
+		} else {
+			c.AbortWithError(500, err)
+		}
+	})
+
+	r.GET("/c/:encodedurl", func(c *gin.Context) {
+		log.Println(c.Request.Header)
+		encodedurl := c.Param("encodedurl")
+
+		if buf, err := page.Capture(encodedurl); err == nil {
+			c.Header("content-length", strconv.Itoa(len(buf)))
+			c.Data(200, "image/jpeg", buf)
 		} else {
 			c.AbortWithError(500, err)
 		}

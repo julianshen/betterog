@@ -11,7 +11,7 @@ import (
 
 func TestDrawText(t *testing.T) {
 	server, err := NewServer(":8888", text2img.Params{
-		FontPath: "fonts/SourceHanSansTC-VF.ttf",
+		FontPath: "../../fonts/SourceHanSansTC-VF.ttf",
 	})
 
 	assert.NoError(t, err)
