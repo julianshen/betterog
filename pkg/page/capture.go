@@ -15,6 +15,7 @@ func Capture(encodedurl string) ([]byte, error) {
 	log.Println(encodedurl)
 	if decoded, err = base64.URLEncoding.DecodeString(encodedurl); err == nil {
 		url := string(decoded)
+		log.Printf("capture URL:%s\n", url)
 
 		ctx, cancel := chromedp.NewContext(
 			context.Background(),
