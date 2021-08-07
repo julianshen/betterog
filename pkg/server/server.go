@@ -68,7 +68,7 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/t/:text", func(c *gin.Context) {
-		if isBot(c) {
+		if !isBot(c) {
 			c.AbortWithStatus(403)
 			return
 		}
