@@ -100,7 +100,7 @@ func (bog *BetterOG) Start() {
 
 		if buf, err := page.Capture(encodedurl); err == nil {
 			c.Header("content-length", strconv.Itoa(len(buf)))
-			cacheControl(c, 86400)
+			cacheControl(c, 10800)
 			c.Data(200, "image/jpeg", buf)
 		} else {
 			c.AbortWithError(500, err)
