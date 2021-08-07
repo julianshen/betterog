@@ -12,6 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/julianshen/betterog/pkg/page"
 	"github.com/julianshen/text2img"
+
+	ua "github.com/mileusna/useragent"
 )
 
 type BetterOG struct {
@@ -49,6 +51,12 @@ func (bog *BetterOG) drawText(text string) (*bytes.Buffer, error) {
 	return nil, err
 }
 
+func isBot(c *gin.Context) bool {
+	useragent := ua.Parse(c.Request.Header.Get("User-Agent"))
+
+	return useragent.Bot
+}
+
 func (bog *BetterOG) Start() {
 	r := gin.Default()
 
@@ -60,7 +68,10 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/t/:text", func(c *gin.Context) {
-		log.Println(c.Request.Header)
+		if isBot(c) {
+			c.AbortWithStatus(403)
+			return
+		}
 		text := c.Param("text")
 
 		if buf, err := bog.drawText(text); err == nil {
@@ -83,7 +94,7 @@ func (bog *BetterOG) Start() {
 		}
 	})
 
-	r.StaticFS("/test", http.Dir("static/"))
+	r.StaticFS("/test", http.Dir("static/test"))
 
 	r.Run(bog.Addr)
 }

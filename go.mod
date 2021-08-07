@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.7.2 // indirect
 	github.com/julianshen/text2img v0.0.0-20200614150653-d396da01618f // indirect
 	github.com/knq/sysutil v0.0.0-20191005231841-15668db23d08 // indirect
+	github.com/mileusna/useragent v1.0.2 // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
 	github.com/otiai10/mint v1.3.2 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
