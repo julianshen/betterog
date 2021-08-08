@@ -37,7 +37,7 @@ func NewServer(addr string, params text2img.Params) (*BetterOG, error) {
 
 func (bog *BetterOG) drawText(text string) (*bytes.Buffer, error) {
 	buf := bytes.NewBuffer(make([]byte, 0))
-	if decoded, err := base64.URLEncoding.DecodeString(text); err == nil {
+	if decoded, err := base64.RawURLEncoding.DecodeString(text); err == nil {
 		text = string(decoded)
 	} else {
 		return nil, err

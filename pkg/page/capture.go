@@ -12,7 +12,7 @@ func Capture(encodedurl string) ([]byte, error) {
 	var err error
 	var decoded []byte
 
-	if decoded, err = base64.URLEncoding.DecodeString(encodedurl); err == nil {
+	if decoded, err = base64.RawURLEncoding.DecodeString(encodedurl); err == nil {
 		url := string(decoded)
 		log.Printf("capture URL:%s\n", url)
 
