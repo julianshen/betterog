@@ -95,10 +95,10 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/c/:encodedurl", func(c *gin.Context) {
-		/*if !isBot(c) {
+		if !isBot(c) {
 			c.AbortWithStatus(403)
 			return
-		}*/
+		}
 
 		encodedurl := c.Param("encodedurl")
 
@@ -131,10 +131,10 @@ func (bog *BetterOG) Start() {
 	})
 
 	r.GET("/jlns1/:encoded_title", func(c *gin.Context) {
-		/*if !isBot(c) {
+		if !isBot(c) {
 			c.AbortWithStatus(403)
 			return
-		}*/
+		}
 
 		encodedTitle := c.Param("encoded_title")
 		url := fmt.Sprintf("http://localhost%s/tt/jlns1/%s", bog.Addr, encodedTitle)
