@@ -22,7 +22,7 @@ type BetterOG struct {
 	drawer text2img.Drawer
 }
 
-func NewServer(addr string, params text2img.Params) (*BetterOG, error) {
+func NewServer(port string, params text2img.Params) (*BetterOG, error) {
 	drawer, err := text2img.NewDrawer(params)
 
 	if err != nil {
@@ -30,7 +30,7 @@ func NewServer(addr string, params text2img.Params) (*BetterOG, error) {
 	}
 
 	return &BetterOG{
-		Addr:   addr,
+		Addr:   fmt.Sprintf(":%s", port),
 		drawer: drawer,
 	}, nil
 }
@@ -69,6 +69,7 @@ func cacheControl(c *gin.Context, ttl int) {
 func (bog *BetterOG) Start() {
 	r := gin.Default()
 
+	r.LoadHTMLGlob("templates/**/*")
 	// for health check
 	r.GET("/__ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -111,7 +112,46 @@ func (bog *BetterOG) Start() {
 		}
 	})
 
+	r.GET("/tt/:template/:encoded_title", func(c *gin.Context) {
+		template := c.Param("template")
+		title := ""
+		encodedTitle := c.Param("encoded_title")
+
+		if titleBytes, err := base64.RawURLEncoding.DecodeString(encodedTitle); err == nil {
+			title = string(titleBytes)
+			log.Println(title)
+		} else {
+			log.Printf("encoded :'%s'\n", encodedTitle)
+			log.Println(err)
+		}
+
+		c.HTML(http.StatusOK, fmt.Sprintf("%s/index.tmpl", template), gin.H{
+			"title": title,
+		})
+	})
+
+	r.GET("/jlns1/:encoded_title", func(c *gin.Context) {
+		/*if !isBot(c) {
+			c.AbortWithStatus(403)
+			return
+		}*/
+
+		encodedTitle := c.Param("encoded_title")
+		url := fmt.Sprintf("http://localhost%s/tt/jlns1/%s", bog.Addr, encodedTitle)
+		log.Println(url)
+
+		if buf, err := page.Capture(base64.RawURLEncoding.EncodeToString([]byte(url))); err == nil {
+			c.Header("content-length", strconv.Itoa(len(buf)))
+			cacheControl(c, 10800)
+			c.Data(200, "image/jpeg", buf)
+		} else {
+			log.Println(err)
+			c.AbortWithError(500, err)
+		}
+	})
+
 	r.StaticFS("/test", http.Dir("static/test"))
+	r.StaticFS("/images", http.Dir("static/images"))
 
 	r.Run(bog.Addr)
 }

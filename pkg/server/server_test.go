@@ -25,3 +25,11 @@ func TestDrawText(t *testing.T) {
 	text, _ := client.Text()
 	assert.Equal(t, "For testing", text)
 }
+
+func TestEncoding(t *testing.T) {
+	code := base64.RawURLEncoding.EncodeToString([]byte("[筆記]利用axios-mock-adapter為axios提供測試用的假資料"))
+	assert.Equal(t, "W-ethuiomF3liKnnlKhheGlvcy1tb2NrLWFkYXB0ZXLngrpheGlvc-aPkOS-m-a4rOippueUqOeahOWBh-izh-aWmQ", code)
+
+	_, err := base64.RawURLEncoding.DecodeString("W-ethuiomF3liKnnlKhheGlvcy1tb2NrLWFkYXB0ZXLngrpheGlvc-aPkOS-m-a4rOippueUqOeahOWBh-izh-aWmQ")
+	assert.NoError(t, err)
+}

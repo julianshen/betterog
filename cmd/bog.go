@@ -19,7 +19,7 @@ func env(key, defaultVal string) string {
 }
 
 func main() {
-	addr := ":" + env("PORT", "8888")
+	port := env("PORT", "8888")
 	fontPath := env("FONTPATH", "fonts/SourceHanSansTC-VF.ttf")
 	backgroundImage := env("BACKGROUND_IMAGE_PATH", "")
 	backgroundColor := env("BACKGROUND_COLOR", "")
@@ -51,7 +51,7 @@ func main() {
 		}
 	}
 
-	if server, err := betterog.NewServer(addr, param); err == nil {
+	if server, err := betterog.NewServer(port, param); err == nil {
 		server.Start()
 	} else {
 		log.Fatal(err)

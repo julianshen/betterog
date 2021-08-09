@@ -20,6 +20,7 @@ WORKDIR /root/
 COPY --from=builder /betterog/bog /root/
 COPY --from=builder /betterog/fonts /root/fonts/
 COPY --from=builder /betterog/static /root/static/
+COPY --from=builder /betterog/templates /root/templates/
 
 EXPOSE 80
 ENTRYPOINT ["dumb-init", "--"]
